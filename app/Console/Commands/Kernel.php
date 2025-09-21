@@ -13,7 +13,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\ImportWbData::class, // Добавьте эту строку
+        Commands\ImportWbData::class,
+        Commands\TestDebugOutput::class,
+        \App\Console\Commands\MakeTokenType::class,
+        \App\Console\Commands\AddTokenTypeToService::class,
+        'verify.account' => \App\Http\Middleware\VerifyAccount::class,
+
     ];
 
     /**

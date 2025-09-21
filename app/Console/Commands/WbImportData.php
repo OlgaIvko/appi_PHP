@@ -20,15 +20,16 @@ class WbImportData extends Command
      * @var string
      */
     protected $signature = 'wb:import-data
-                            {--all : Import all data}
-                            {--products : Import products}
-                            {--orders : Import orders}
-                            {--sales : Import sales}
-                            {--stocks : Import stocks}
-                            {--incomes : Import incomes}
-                            {--date-from= : Date from for orders and sales (format: YYYY-MM-DD)}
-                            {--chunk-size=100 : Number of records to process at once}';
-
+                        {--all : Import all data}
+                        {--products : Import products}
+                        {--orders : Import orders}
+                        {--sales : Import sales}
+                        {--stocks : Import stocks}
+                        {--incomes : Import incomes}
+                        {--date-from= : Date from for orders and sales (format: YYYY-MM-DD)}
+                        {--chunk-size=100 : Number of records to process at once}
+                        {--account-id= : Account ID}
+                        {--api-service-id= : API Service ID}';
     /**
      * The console command description.
      *
@@ -53,6 +54,13 @@ class WbImportData extends Command
     public function handle()
     {
         $this->info('🚀 Starting Wildberries API data import...');
+
+        if ($this->option('account-id') && $this->option('api-service-id')) {
+            $this->apiService->setTokenFromDatabase(
+                $this->option('account-id'),
+                $this->option('api-service-id')
+            );
+        }
         $this->line('');
 
         $startTime = microtime(true);

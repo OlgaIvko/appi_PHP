@@ -10,6 +10,7 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
+        'account_id',
         'sale_id',
         'date',
         'last_change_date',
@@ -36,7 +37,8 @@ class Sale extends Model
         'cancel_date',
         'order_type',
         'sticker',
-        'g_number'
+        'g_number',
+        'last_updated'
     ];
 
     protected $casts = [
@@ -50,6 +52,75 @@ class Sale extends Model
         'discount_percent' => 'decimal:2',
         'spp' => 'decimal:2',
         'finished_price' => 'decimal:2',
-        'price_with_disc' => 'decimal:2'
+        'price_with_disc' => 'decimal:2',
+        'last_updated' => 'datetime'
     ];
+
+
+
+    public function account()
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    // public function scopeFreshData($query, $hours = 24, $accountId = null)
+    // {
+    //     $query = $query->where('last_updated', '>=', now()->subHours($hours));
+
+    //     if ($accountId) {
+    //         $query->where('account_id', $accountId);
+    //     }
+
+    //     return $query;
+    // }
+
+    public function scopeForAccount($query, $accountId)
+    {
+        return $query->where('account_id', $accountId);
+    }
+
+    // Добавим scope для свежих данных по дате
+    public function scopeFreshByDate($query, $days = 7, $accountId = null)
+    {
+        $query = $query->where('date', '>=', now()->subDays($days));
+
+        if ($accountId) {
+            $query->where('account_id', $accountId);
+        }
+
+        return $query->orderBy('date', 'desc');
+    }
+
+    public function scopeToday($query, $accountId = null)
+    {
+        $query = $query->whereDate('date', today());
+
+        if ($accountId) {
+            $query->where('account_id', $accountId);
+        }
+
+        return $query;
+    }
+
+    public function scopeThisWeek($query, $accountId = null)
+    {
+        $query = $query->whereBetween('date', [now()->startOfWeek(), now()->endOfWeek()]);
+
+        if ($accountId) {
+            $query->where('account_id', $accountId);
+        }
+
+        return $query;
+    }
+
+    public function scopeThisMonth($query, $accountId = null)
+    {
+        $query = $query->whereBetween('date', [now()->startOfMonth(), now()->endOfMonth()]);
+
+        if ($accountId) {
+            $query->where('account_id', $accountId);
+        }
+
+        return $query;
+    }
 }
