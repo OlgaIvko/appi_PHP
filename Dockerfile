@@ -38,10 +38,9 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Создание пользователя
-RUN useradd -G www-data,root -u 1000 -d /home/devuser devuser \
-    && mkdir -p /home/devuser/.composer \
-    && chown -R devuser:devuser /home/devuser
-
+RUN usermod -a -G root www-data \
+    && mkdir -p /var/www/.composer \
+    && chown -R www-data:www-data /var/www
 # Переключение на пользователя
 USER devuser
 
