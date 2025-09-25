@@ -61,6 +61,9 @@ docker сompose exec mysql netstat -tlnp | grep mysql
  php artisan app:verify-tz
  php artisan db:seed
 
+ pwd
+ls -la
+
 
  # Проверка здоровья приложения
 curl -X GET http://localhost:8000/api/health
@@ -79,6 +82,8 @@ docker compose exec mysql netstat -tln | grep 3307
 # Проверим подключение извне
 mysql -h 127.0.0.1 -P 3307 -u wb_user -pwb_password wb_api -e "SELECT 1;"
 ```
+
+http://64.188.94.175:8080
 
 # Удалить все таблицы
 
